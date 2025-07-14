@@ -10,15 +10,6 @@ x = np.random.randn(n, 2)
 y = 2 * ((omega * x[:, 0:1] + x[:, 1:2] + noise) > 0) - 1
 y = y.flatten()
 
-# カーネル行列 K の構築: K_ij = y_i y_j x_i^T x_j
-# K = (y[:, None] * x) @ (y[:, None] * x).T
-
-# プロジェクション演算子
-# def project(alpha):
-#     return np.clip(alpha, 0, 1)
-
-# パラメータ設定
-# lambdas = [0.01, 0.1, 1, 10]
 lambda_ = 0.1
 eta = 0.01
 iterations = 200
