@@ -10,7 +10,7 @@ x = np.random.randn(n, 2)
 y = 2 * ((omega * x[:, 0:1] + x[:, 1:2] + noise) > 0) - 1
 y = y.flatten()
 
-lambda_ = 0.1
+lam = 0.1
 eta = 0.01
 iterations = 200
 
@@ -31,13 +31,13 @@ def primal_subgradient(x, y, lam, num_iters=200, eta=0.1):
 
     return w, losses
 
-w, losses = primal_subgradient(x, y, lambda_, num_iters=iterations, eta=eta)
+w, losses = primal_subgradient(x, y, lam, num_iters=iterations, eta=eta)
 
 plt.figure(figsize=(8, 5))
 plt.plot(losses)
 plt.xlabel("Iteration")
 plt.ylabel("primal lass")
-plt.title(f"optimization by subgradient method (λ={lambda_})")
+plt.title(f"optimization by subgradient method (λ={lam})")
 plt.legend()
 plt.show()
 

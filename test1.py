@@ -13,7 +13,6 @@ y = 2 * y.astype(int) - 1
 # Add bias term (1) to the data
 X = np.hstack([np.ones((n, 1)), x])
 d = X.shape[1]
-lambda_reg = 1e-2
 
 # Logistic loss and gradient
 def logistic_loss(w, X, y, lam):
@@ -45,7 +44,7 @@ def batch_gradient_descent(X, y, lam, lr=0.1, max_iter=100):
 
 # Newton's method
 def newton_method(X, y, lam, max_iter=100):
-    w = np.zeros(X.shape[1])
+    w = np.ones(X.shape[1])
     losses = []
     losses.append(logistic_loss(w, X, y, lam))
     for _ in range(max_iter):
@@ -55,21 +54,22 @@ def newton_method(X, y, lam, max_iter=100):
         losses.append(logistic_loss(w, X, y, lam))
     return w, losses
 
+lambda_reg = 0.5
+lr = 0.1
 # Run optimization
-w_gd, losses_gd = batch_gradient_descent(X, y, lambda_reg, lr=0.1, max_iter=100)
-w_nt, losses_nt = newton_method(X, y, lambda_reg, max_iter=100)
+w_gd, losses_gd = batch_gradient_descent(X, y, lambda_reg, lr=lr, max_iter=200)
+w_nt, losses_nt = newton_method(X, y, lambda_reg, max_iter=200)
 
 # Determine reference minimum value
 J_star = min(losses_gd[-1], losses_nt[-1])
 
 # Calculate log-scale difference from optimal
-epsilon = 1e-14
-log_diff_gd = [max(abs(J - J_star), epsilon) for J in losses_gd]
-log_diff_nt = [max(abs(J - J_star), epsilon) for J in losses_nt]
+log_diff_gd = [J - J_star for J in losses_gd]
+log_diff_nt = [J - J_star for J in losses_nt]
 
 # Plot
 plt.figure(figsize=(8, 5))
-plt.semilogy(log_diff_gd, label="gradient descent")
+plt.semilogy(log_diff_gd, label="Gradient Descent")
 plt.semilogy(log_diff_nt, label="Newton")
 # plt.plot(log_diff_gd, label="gradient descent")
 # plt.plot(log_diff_nt, label="Newton")
@@ -77,6 +77,6 @@ plt.xlabel("iteration")
 plt.ylabel(r"$|J(w^{(t)}) - J(\hat{w})|$")
 plt.legend()
 plt.grid(True)
-plt.title("Convergence of Optimization Methods")
+plt.title("Steepest gradient descent method(η={:.3f}) vs Newton method".format(lr))
 plt.tight_layout()
 plt.show()

@@ -18,8 +18,7 @@ def project(alpha):
     return np.clip(alpha, 0, 1)
 
 # パラメータ設定
-# lambdas = [0.01, 0.1, 1, 10]
-lambda_ = 0.1
+lam = 0.1
 eta = 0.01
 iterations = 200
 
@@ -31,20 +30,20 @@ primal_history = []
 
 for t in range(iterations):
     # 勾配計算: ∇ = (1 / 2λ) Kα - 1
-    grad = (1 / (2 * lambda_)) * K @ alpha - 1
+    grad = (1 / (2 * lam)) * K @ alpha - 1
 
     # 勾配ステップと射影
     alpha = project(alpha - eta * grad)
 
     # w の計算
-    w = (1 / (2 * lambda_)) * np.sum((alpha * y)[:, None] * x, axis=0)
+    w = (1 / (2 * lam)) * np.sum((alpha * y)[:, None] * x, axis=0)
 
     # ヒンジ損失と正則化項による元の目的関数の値
     hinge_loss = np.maximum(0, 1 - y * (x @ w)).sum()
-    primal_obj = hinge_loss + (lambda_ / 2) * np.dot(w, w)
+    primal_obj = hinge_loss + (lam / 2) * np.dot(w, w)
 
     # 双対目的関数の値
-    dual_obj = - (1 / (4 * lambda_)) * alpha @ K @ alpha + np.sum(alpha)
+    dual_obj = - (1 / (4 * lam)) * alpha @ K @ alpha + np.sum(alpha)
 
     dual_history.append(dual_obj)
     primal_history.append(primal_obj)
@@ -54,7 +53,7 @@ plt.plot(range(iterations), dual_history, label="Dual Lagrangian", color="blue")
 plt.plot(range(iterations), primal_history, label="Primal Loss", color="red", linestyle='--')
 plt.xlabel("Iteration")
 plt.ylabel("Function Value")
-plt.title(f"Primal and Negative Dual Function Values (λ={lambda_})")
+plt.title(f"Primal and Negative Dual Function Values (λ={lam})")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
